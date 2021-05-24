@@ -8,7 +8,7 @@ SteamCommunity = require('steamcommunity');
 
 const client = new Steam();
 const Settings = {
-    "games": [289070, 271590] // appIDs(max it can do it's 15) MUST be included. Read README.md for more info.
+    "games": [] // appID
 }
 
 // Introduction
