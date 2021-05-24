@@ -1,0 +1,29 @@
+{
+  "name": "steam-idler",
+  "version": "1.0.0",
+  "description": "Script for idling and boosting playtime for chosen games without using computer resources",
+  "main": "steamidler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dragonGR/Steam-idler.git"
+  },
+  "keywords": [
+    "steam"
+  ],
+  "author": "dragonGR",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/dragonGR/Steam-idler/issues"
+  },
+  "homepage": "https://github.com/dragonGR/Steam-idler#readme",
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "fs": "^0.0.1-security",
+    "readline-sync": "^1.4.10",
+    "steam-user": "^4.19.8",
+    "steamcommunity": "^3.42.0"
+  }
+}
