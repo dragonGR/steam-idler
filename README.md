@@ -8,15 +8,13 @@ I do not store any of your credentials, this take advantage of open-source'd mod
 
 ## Required modules
 - [steam-user](https://www.npmjs.com/package/steam-user)
-- [fs](https://www.npmjs.com/package/fs)
 - [chalk](https://www.npmjs.com/package/chalk)
-- [steamcommunity](https://www.npmjs.com/package/steamcommunity)
 - [readline-sync](https://www.npmjs.com/package/readline-sync)
 
 ## Installation
 Let's git clone this repo somewhere.
 ``` 
-git clone https://github.com/dragonGR/steam-idle
+git clone https://github.com/dragonGR/steam-idler
 ```
 Then, install required dependencies.
 This can be achieved by doing
@@ -25,11 +23,11 @@ npm install
 ```
 Now, open the file with an editor, Windows' notepad can do the job as well and head over to line 11 and place your preferred game's ID inside of those brackets. Can be separated by a comma[,].
 
-``"games": []``
+``"ids": []``
 
 And finally, run it
 ```
-node steamidler.js
+node idler.js
 ```
 
 ## Frequently Asked Questions
@@ -39,7 +37,7 @@ For example: https://store.steampowered.com/app/**123**/steam
 the app ID is the numeric ones, **123**.
 
 **How many games can i idle simutalneously?**
-- For now it can go up to 15 games.
+- It can go up to 15 games.
 
 **Is it safe? I don't want to get a VAC ban on my 6.9k CS:GO account**
 - It won't ban you even when playing on VAC secured server. It doesn't modify working memory pool so VAC won't go crazy. I played CSGO comp with Idle Master running in background a couple of times.
@@ -52,9 +50,7 @@ the app ID is the numeric ones, **123**.
 
 ## Resources
 - [steam-user](https://www.npmjs.com/package/steam-user)
-- [fs](https://www.npmjs.com/package/fs)
 - [chalk](https://www.npmjs.com/package/chalk)
-- [steamcommunity](https://www.npmjs.com/package/steamcommunity)
 - [readline-sync](https://www.npmjs.com/package/readline-sync)
 - [Steam](https://developer.valvesoftware.com/wiki/Steam_Web_API) - web API
 

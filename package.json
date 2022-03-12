@@ -1,29 +1,28 @@
 {
+  "type": "module",
   "name": "steam-idler",
-  "version": "1.0.0",
-  "description": "Script for idling and boosting playtime for chosen games without using computer resources",
-  "main": "steamidler.js",
+  "version": "1.1.0",
+  "description": "A written-in-JS idler for steam games to get cards and increase playtime",
+  "main": "idler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+      "start": "node idler.js"
+  },
+  "dependencies": {
+      "chalk": "^5.0.1",
+      "readline-sync": "^1.4.10",
+      "steam-user": "^4.24.0"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dragonGR/Steam-idler.git"
+      "type": "git",
+      "url": "https://github.com/dragonGR/Steam-Idler.git"
   },
-  "keywords": [
-    "steam"
-  ],
   "author": "dragonGR",
   "license": "GPL-3.0",
+  "keywords": [
+      "Steam",
+      "idler"
+  ],
   "bugs": {
-    "url": "https://github.com/dragonGR/Steam-idler/issues"
-  },
-  "homepage": "https://github.com/dragonGR/Steam-idler#readme",
-  "dependencies": {
-    "chalk": "^4.1.1",
-    "fs": "^0.0.1-security",
-    "readline-sync": "^1.4.10",
-    "steam-user": "^4.19.8",
-    "steamcommunity": "^3.42.0"
+      "url": "https://github.com/dragonGR/Steam-idler/issues"
   }
 }
