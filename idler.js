@@ -9,6 +9,11 @@ const Games = {
     "ids": []
 }
 
+const Profilefuncs = {
+    "acceptItemNotify": true,
+    "acceptTradesNotify": true
+}
+
 console.log(chalk.black.bold.yellowBright('==================='));
 console.log(chalk.black.bold.yellowBright('Steam Idler'));
 console.log(chalk.black.bold.yellowBright('by dragonGR'));
@@ -71,6 +76,24 @@ var TotalGames = function(array) {
     }
     return array;
 }
+
+// Bellow ones are meant to inform user in case they have either received a trade offer
+// Or a new item in their inventory.
+client.on('newItems', function (count) {
+    if(Profilefuncs.acceptItemNotify) {
+      if(count > 0) {
+          log(chalk.greenBright("You have received ("+ count + ") item(s) in your Inventory."));  
+      } 
+    }
+});
+
+client.on('tradeOffers', function (number, steamID) {
+    if(Profilefuncs.acceptTradesNotify) {
+        if (number > 0) {
+            log(chalk.greenBright("You have received ("+ number +") Trade Offer(s) from "+ steamID +"."));     
+        }        
+    }    
+});
 
 // This is my log thing. Prints time in HH:DD:SS format along with [STEAM].
 // You can ditch it and use console.log right away if you don't care about fanciness.
