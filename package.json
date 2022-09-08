@@ -5,24 +5,24 @@
   "description": "A written-in-JS idler for steam games to get cards and increase playtime",
   "main": "idler.js",
   "scripts": {
-      "start": "node idler.js"
+    "start": "node idler.js"
   },
   "dependencies": {
-      "chalk": "^5.0.1",
-      "readline-sync": "^1.4.10",
-      "steam-user": "^4.24.0"
+    "chalk": "^5.0.1",
+    "readline-sync": "^1.4.10",
+    "steam-user": "^4.25.0"
   },
   "repository": {
-      "type": "git",
-      "url": "https://github.com/dragonGR/Steam-Idler.git"
+    "type": "git",
+    "url": "https://github.com/dragonGR/Steam-Idler.git"
   },
   "author": "dragonGR",
   "license": "GPL-3.0",
   "keywords": [
-      "Steam",
-      "idler"
+    "Steam",
+    "idler"
   ],
   "bugs": {
-      "url": "https://github.com/dragonGR/Steam-idler/issues"
+    "url": "https://github.com/dragonGR/Steam-idler/issues"
   }
 }
