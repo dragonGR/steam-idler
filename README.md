@@ -1,58 +1,70 @@
-# Steam idler
-## _Boost your Steam playtime hour_
+# Steam Idler
 
-Steam idler is a Script written in JS for idling and boosting playtime for chosen games without using computer resources.
+This is a script written in Node JS and what it does is boost your playtime for a given game, thus acquiring trading card drops that can be only obtained by playing it.
 
-## Note
-I do not store any of your credentials, this take advantage of open-source'd modules which you are obligated to check their sources if you are this concerned about transparency. This is a 100% open-source project with complete transparency. It's kinda the same as using Steam Auth App on your client, the only difference is that it simulates the games.
+You can do a lot of things with trading cards. You can craft them to earn items that will help you customise your profile by levelling up, and you can sell them for some profit as well.
 
-## Required modules
+Please note that it's not possible to farm all of the set cards but only what the developers of the game choose to.
+
+For example, Half-Life 2 has eight cards in its set. You can receive four card drops by playing it, but you'll need to collect the other half of the set from other community members by either purchasing them or trading them.
+
+## A note from the developer
+Hey and thanks for using my module. Any contribution is welcome, and I will try my best to assist you with anything if possible. Please feel free to fork it and do whatever you want with it.
+
+This script runs locally, which means it does not involve any kind of server on my behalf. The code itself and the modules as well are open-sourced, so you can check them if you are concerned about the legitimacy of it.
+
+Steam is not going to ban you because of using such scripts, nor are you going to get a VAC ban. If you do, then you have done something terribly wrong, such as cheating. Steam doesn't take action against users for using idlers.
+
+I have decided to write this script solely because I wanted to bump up my playtime on certain games so I could show off to people and say, "Hey, I'm a veteran too!". Of course, that didn't work because I was so terrible at playing them and I couldn't find an explanation of what I was doing throughout the 650 hours of TF2.
+
+Here is my Steam profile if you want to reach out to me:  
+https://steamcommunity.com/id/chapo102/
+
+My e-mail can be located below my profile picture on Github. ;)
+
+# Installation
+- ```git clone https://github.com/dragonGR/steam-idler```
+- ```cd steam-idler```
+- ```npm install```
+
+## Modules
+This script takes advantage of three modules:
 - [steam-user](https://www.npmjs.com/package/steam-user)
 - [chalk](https://www.npmjs.com/package/chalk)
 - [readline-sync](https://www.npmjs.com/package/readline-sync)
 
-## Installation
-Let's git clone this repo somewhere.
-``` 
-git clone https://github.com/dragonGR/steam-idler
+So, please make sure you have them installed with either of the following methods after ```git clone```:
+
+- ```npm install steam-user chalk readline-sync```
+- ```npm install```
+
+# Editing it
+Now, open the ```idler.js``` file with your favourite editor and check the following code:
+
+```javascript
+const  Games  = {
+"ids": []
+}
 ```
-Then, install required dependencies.
-This can be achieved by doing
+What you have to do is to paste the game's ID within those ```[]``` brackets. That can be easily done by visiting the game's steam store and pasting the ID from the URL.
+
+For example, this is the URL for Civilization VI:
+https://store.steampowered.com/app/289070/Sid_Meiers_Civilization_VI/
+
+The game ID for it is 289070``` so the final code will look like this:
+```javascript
+const  Games  = {
+"ids": [289070]
+}
 ```
-npm install
-```
-Now, open the file with an editor, Windows' notepad can do the job as well and head over to line 11 and place your preferred game's ID inside of those brackets. Can be separated by a comma[,].
+If you want to add a second game, you can add a comma after the first ID and you are set. You can go as high as 15 games.
 
-``"ids": []``
+# Running it
+Finally, we can run it by executing:
+```node idler.js```
 
-And finally, run it
-```
-node idler.js
-```
+And it will prompt us to enter our Steam username, password, and Steam Auth code (only if you have 2FA enabled).
 
-## Frequently Asked Questions
-**How to find my game's ID?**
-- Open the steam page of the game you want and copy the numbers in the URL.
-For example: https://store.steampowered.com/app/**123**/steam
-the app ID is the numeric ones, **123**.
+If you have successfully entered the details, it will notify you that the magic is actually taking place and you can see it by checking your Steam account's current status.
 
-**How many games can i idle simutalneously?**
-- It can go up to 15 games.
-
-**Is it safe? I don't want to get a VAC ban on my 6.9k CS:GO account**
-- It won't ban you even when playing on VAC secured server. It doesn't modify working memory pool so VAC won't go crazy. I played CSGO comp with Idle Master running in background a couple of times.
-
-**Is this Bot saving Information about my Account?**
-- Read [#Note](https://github.com/dragonGR/steam-idler#note): I do not store any of your credentials, this take advantage of open-source'd modules which you are obligated to check their sources if you are this concerned about transparency. This is a 100% open-source project with complete transparency. It's kinda the same as using Steam Auth App on your client, the only difference is that it simulates the games.
-
-**Does the Author tracks my IP?**
-- No, this Bot runs on localhost (Your PC) and your details cannot be Tracked.
-
-## Resources
-- [steam-user](https://www.npmjs.com/package/steam-user)
-- [chalk](https://www.npmjs.com/package/chalk)
-- [readline-sync](https://www.npmjs.com/package/readline-sync)
-- [Steam](https://developer.valvesoftware.com/wiki/Steam_Web_API) - web API
-
-## License
-GPL v3.0
+###  That's all, folks!
