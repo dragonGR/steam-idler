@@ -2,7 +2,7 @@
   "type": "module",
   "name": "steam-idler",
   "version": "1.1.0",
-  "description": "A written-in-JS idler for steam games to get cards and increase playtime",
+  "description": "A steam Idler, written in JS to farm playtime and get trading cards",
   "main": "idler.js",
   "scripts": {
     "start": "node idler.js"
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dragonGR/Steam-Idler.git"
+    "url": "https://github.com/dragonGR/steam-idler.git"
   },
   "author": "dragonGR",
   "license": "GPL-3.0",
@@ -23,6 +23,6 @@
     "idler"
   ],
   "bugs": {
-    "url": "https://github.com/dragonGR/Steam-idler/issues"
+    "url": "https://github.com/dragonGR/steam-idler/issues"
   }
 }
