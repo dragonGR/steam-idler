@@ -1,16 +1,16 @@
 {
   "type": "module",
   "name": "steam-idler",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A steam Idler, written in JS to farm playtime and get trading cards",
   "main": "idler.js",
   "scripts": {
     "start": "node idler.js"
   },
   "dependencies": {
-    "chalk": "^5.0.1",
-    "readline-sync": "^1.4.10",
-    "steam-user": "^4.27.0"
+    "chalk": "^5.2.0",
+    "prompts": "^2.4.2",
+    "steam-user": "^4.28.5"
   },
   "repository": {
     "type": "git",

@@ -31,11 +31,11 @@ My e-mail can be located below my profile picture on Github. ;)
 This script takes advantage of three modules:
 - [steam-user](https://www.npmjs.com/package/steam-user)
 - [chalk](https://www.npmjs.com/package/chalk)
-- [readline-sync](https://www.npmjs.com/package/readline-sync)
+- [prompts](https://www.npmjs.com/package/prompts)
 
 So, please make sure you have them installed with either of the following methods after ```git clone```:
 
-- ```npm install steam-user chalk readline-sync```
+- ```npm install steam-user chalk prompts```
 - ```npm install```
 
 # Editing it
