@@ -2,16 +2,21 @@ import Steam from "steam-user";
 import chalk from "chalk";
 import prompts from "prompts";
 
-const Games = {
-    ids: [], // Array to store the game IDs
+// Define the game IDs to idle
+const games = {
+    ids: [], // Add game IDs here
 };
 
-console.log(
-    chalk.bold.yellowBright(
-        "===================\nSteam Idler\nby dragonGR\n==================="
-    )
-);
+// Utility function to shuffle an array
+const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+};
 
+// Function to retrieve user credentials with validation
 async function getCredentials() {
     try {
         const response = await prompts([
@@ -19,117 +24,107 @@ async function getCredentials() {
                 type: "text",
                 name: "username",
                 message: chalk.italic.blueBright("Steam username:"),
+                validate: (username) => {
+                    if (!username || username.length < 3) {
+                        return "Username must be at least 3 characters long.";
+                    }
+                    return true;
+                }
             },
             {
                 type: "password",
                 name: "password",
                 message: chalk.italic.blueBright("Password:"),
+                validate: (password) => {
+                    if (!password || password.length < 6) {
+                        return "Password must be at least 6 characters long.";
+                    }
+                    return true;
+                }
             },
         ]);
 
+        if (!response.username || !response.password) {
+            console.error(chalk.redBright("Please enter both your Steam username and password."));
+            process.exit(1);
+        }
+
         return response;
     } catch (error) {
-        console.log(
-            chalk.redBright(
-                "An error occurred while retrieving credentials:",
-                error
-            )
-        );
+        console.error(chalk.redBright("Error retrieving credentials:", error));
         process.exit(1);
     }
 }
 
-(async function () {
-    try {
-        const { username, password } = await getCredentials();
+// Function to handle Steam login errors
+function handleSteamError(err, client) {
+    let errorMessage = "An error occurred:";
+    switch (err.eresult) {
+        case Steam.EResult.InvalidPassword:
+            errorMessage = "Login Denied - Incorrect credentials.";
+            break;
+        case Steam.EResult.AlreadyLoggedInElsewhere:
+            errorMessage = "Login Denied - Already logged in elsewhere.";
+            break;
+        case Steam.EResult.AccountLogonDenied:
+            errorMessage = "Login Denied - SteamGuard is required.";
+            break;
+        default:
+            errorMessage += ` ${err}`;
+    }
 
-        if (!username || !password) {
-            console.log(
-                chalk.redBright(
-                    "Please enter your Steam username and password."
-                )
-            );
+    console.error(chalk.redBright(errorMessage));
+    client.logOff();
+}
+
+// Main function to handle the Steam login and game idling
+(async function main() {
+    console.log(
+        chalk.bold.yellowBright(
+            "===================\nSteam Idler\nby dragonGR\n==================="
+        )
+    );
+
+    const { username, password } = await getCredentials();
+
+    const client = new Steam();
+
+    client.logOn({ accountName: username, password: password });
+
+    client.on("loggedOn", () => {
+        if (games.ids.length === 0) {
+            console.error(chalk.redBright("No game ID was provided."));
+            client.logOff();
             return;
         }
 
-        const client = new Steam();
+        client.setPersona(Steam.EPersonaState.Online);
+        console.log(chalk.greenBright("Successfully logged in!"));
 
-        client.logOn({
-            accountName: username,
-            password: password,
-        });
+        client.gamesPlayed(shuffleArray(games.ids));
+    });
 
-        client.on("loggedOn", () => {
-            if (Games.ids.length === 0) {
-                console.log(chalk.redBright("No game ID was included."));
-                client.logOff();
-                return;
-            }
-
-            client.setPersona(Steam.EPersonaState.Online);
-            console.log(chalk.greenBright("Successfully logged in!"));
-
-            client.gamesPlayed(shuffleArray(Games.ids));
-        });
-
-        client.on("accountLimitations", (locked, communityBanned) => {
-            if (Games.ids.length >= 15) {
-                console.log(chalk.redBright("Exceeded limit of 15 games."));
-                client.logOff();
-                return;
-            }
-
-            if (locked) {
-                console.log(chalk.redBright("Locked account."));
-                client.logOff();
-                return;
-            }
-
-            if (communityBanned) {
-                console.log(chalk.redBright("Banned account."));
-                client.logOff();
-                return;
-            }
-
-            console.log(chalk.greenBright(`Game ID(s) to roll: ${Games.ids}.`));
-        });
-
-        client.on("error", (err) => {
-            switch (err.eresult) {
-                case Steam.EResult.InvalidPassword:
-                    console.log(
-                        chalk.redBright("Login Denied - Incorrect credentials.")
-                    );
-                    break;
-                case Steam.EResult.AlreadyLoggedInElsewhere:
-                    console.log(
-                        chalk.redBright("Login Denied - Already logged in.")
-                    );
-                    break;
-                case Steam.EResult.AccountLogonDenied:
-                    console.log(
-                        chalk.redBright(
-                            "Login Denied - SteamGuard is required."
-                        )
-                    );
-                    break;
-                default:
-                    console.log(chalk.redBright("An error occurred:", err));
-                    break;
-            }
-
+    client.on("accountLimitations", (locked, communityBanned) => {
+        if (games.ids.length >= 15) {
+            console.error(chalk.redBright("Exceeded limit of 15 games."));
             client.logOff();
-        });
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
+            return;
         }
-    } catch (error) {
-        console.log(chalk.redBright("An error occurred:", error));
-        process.exit(1);
-    }
+
+        if (locked) {
+            console.error(chalk.redBright("Account is locked."));
+            client.logOff();
+            return;
+        }
+
+        if (communityBanned) {
+            console.error(chalk.redBright("Account is community banned."));
+            client.logOff();
+            return;
+        }
+
+        console.log(chalk.greenBright(`Rolling game IDs: ${games.ids.join(", ")}`));
+    });
+
+    client.on("error", (err) => handleSteamError(err, client));
 })();
