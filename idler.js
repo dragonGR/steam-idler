@@ -1,6 +1,9 @@
 import Steam from "steam-user";
 import chalk from "chalk";
 import prompts from "prompts";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Define the game IDs to idle
 const games = {
@@ -8,123 +11,87 @@ const games = {
 };
 
 // Utility function to shuffle an array
-const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-};
+const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
 
-// Function to retrieve user credentials with validation
+// Function to retrieve user credentials (supports environment variables)
 async function getCredentials() {
-    try {
-        const response = await prompts([
-            {
-                type: "text",
-                name: "username",
-                message: chalk.italic.blueBright("Steam username:"),
-                validate: (username) => {
-                    if (!username || username.length < 3) {
-                        return "Username must be at least 3 characters long.";
-                    }
-                    return true;
-                }
-            },
-            {
-                type: "password",
-                name: "password",
-                message: chalk.italic.blueBright("Password:"),
-                validate: (password) => {
-                    if (!password || password.length < 6) {
-                        return "Password must be at least 6 characters long.";
-                    }
-                    return true;
-                }
-            },
-        ]);
+    if (process.env.STEAM_USERNAME && process.env.STEAM_PASSWORD) {
+        return {
+            username: process.env.STEAM_USERNAME,
+            password: process.env.STEAM_PASSWORD,
+        };
+    }
 
-        if (!response.username || !response.password) {
-            console.error(chalk.redBright("Please enter both your Steam username and password."));
-            process.exit(1);
-        }
+    console.log(chalk.cyan("Credentials not found in environment variables. Prompting user..."));
 
-        return response;
-    } catch (error) {
-        console.error(chalk.redBright("Error retrieving credentials:", error));
+    const response = await prompts([
+        {
+            type: "text",
+            name: "username",
+            message: chalk.blue("Steam username:"),
+            validate: (username) => username.length >= 3 || "Username must be at least 3 characters long."
+        },
+        {
+            type: "password",
+            name: "password",
+            message: chalk.blue("Password:"),
+            validate: (password) => password.length >= 6 || "Password must be at least 6 characters long."
+        },
+    ]);
+
+    if (!response.username || !response.password) {
+        console.error(chalk.red("Username and password are required."));
         process.exit(1);
     }
+
+    return response;
 }
 
-// Function to handle Steam login errors
+// Steam login error handler
 function handleSteamError(err, client) {
-    let errorMessage = "An error occurred:";
-    switch (err.eresult) {
-        case Steam.EResult.InvalidPassword:
-            errorMessage = "Login Denied - Incorrect credentials.";
-            break;
-        case Steam.EResult.AlreadyLoggedInElsewhere:
-            errorMessage = "Login Denied - Already logged in elsewhere.";
-            break;
-        case Steam.EResult.AccountLogonDenied:
-            errorMessage = "Login Denied - SteamGuard is required.";
-            break;
-        default:
-            errorMessage += ` ${err}`;
-    }
+    const errorMessages = {
+        [Steam.EResult.InvalidPassword]: "Incorrect credentials.",
+        [Steam.EResult.AlreadyLoggedInElsewhere]: "Already logged in elsewhere.",
+        [Steam.EResult.AccountLogonDenied]: "SteamGuard required.",
+    };
 
-    console.error(chalk.redBright(errorMessage));
+    const message = errorMessages[err.eresult] || `Unexpected error: ${err}`;
+    console.error(chalk.red(`Login failed: ${message}`));
     client.logOff();
 }
 
-// Main function to handle the Steam login and game idling
+// Main function to idle games
 (async function main() {
     console.log(
-        chalk.bold.yellowBright(
-            "===================\nSteam Idler\nby dragonGR\n==================="
-        )
+        chalk.yellowBright.bold(`\n==========\n Steam Idler by dragonGR \n==========`)
     );
 
     const { username, password } = await getCredentials();
 
     const client = new Steam();
-
     client.logOn({ accountName: username, password: password });
 
     client.on("loggedOn", () => {
-        if (games.ids.length === 0) {
-            console.error(chalk.redBright("No game ID was provided."));
+        if (!games.ids.length) {
+            console.error(chalk.red("No game IDs provided. Exiting."));
             client.logOff();
             return;
         }
 
+        console.log(chalk.green("Successfully logged into Steam!"));
         client.setPersona(Steam.EPersonaState.Online);
-        console.log(chalk.greenBright("Successfully logged in!"));
-
-        client.gamesPlayed(shuffleArray(games.ids));
-    });
-
-    client.on("accountLimitations", (locked, communityBanned) => {
-        if (games.ids.length >= 15) {
-            console.error(chalk.redBright("Exceeded limit of 15 games."));
-            client.logOff();
-            return;
-        }
-
-        if (locked) {
-            console.error(chalk.redBright("Account is locked."));
-            client.logOff();
-            return;
-        }
-
-        if (communityBanned) {
-            console.error(chalk.redBright("Account is community banned."));
-            client.logOff();
-            return;
-        }
-
-        console.log(chalk.greenBright(`Rolling game IDs: ${games.ids.join(", ")}`));
+        const shuffledGames = shuffleArray(games.ids);
+        console.log(chalk.cyan(`Idling games: ${shuffledGames.join(", ")}`));
+        client.gamesPlayed(shuffledGames);
     });
 
     client.on("error", (err) => handleSteamError(err, client));
+
+    client.on("accountLimitations", (locked, banned) => {
+        if (locked || banned) {
+            console.error(chalk.red("Account has limitations. Exiting..."));
+            client.logOff();
+            return;
+        }
+    });
 })();
